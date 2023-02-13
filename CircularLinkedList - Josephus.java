@@ -189,6 +189,5 @@ public class CircularLinkedList<E> implements Iterable<E> {
 
 		}
 
-
 	}
 }
