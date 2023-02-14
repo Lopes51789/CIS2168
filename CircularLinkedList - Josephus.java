@@ -1,20 +1,6 @@
 import java.util.Iterator;
 import java.util.Scanner;
 
-public class Lab03 {
-    public static void main(String[] args){
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Enter the number of soldiers: ");
-        int soldiers = scan.nextInt();
-        System.out.println("Enter count: ");
-        int count = scan.nextInt();
-
-        CircularLinkedList army = new CircularLinkedList(soldiers, count);
-        System.out.println(army);
-
-    }
-}
-
 class CircularLinkedList<E> implements Iterable<E> {
     Node<E> head;
     Node<E> tail;
@@ -26,12 +12,13 @@ class CircularLinkedList<E> implements Iterable<E> {
      * */
     public CircularLinkedList(int size, int count) {
         this.count = count;
+
         int i = size;
-        while(this.size <= size){
-            Node soldier = new Node(i+1);
-            soldier.next = head;
-            tail = soldier;
-            head = tail;
+        while(this.size<size){
+            Node nodeToBeAdded = new Node(i);
+            head = nodeToBeAdded;
+            head.next = tail;
+            tail = head;
 
             i--;
             this.size++;
@@ -188,6 +175,8 @@ class CircularLinkedList<E> implements Iterable<E> {
         }
 
     }
+
+
     // The Node class
     class Node<E>{
         E item;
@@ -202,9 +191,25 @@ class CircularLinkedList<E> implements Iterable<E> {
      * Return Node<E> found at the specified index
      * Be sure to check for out of bounds cases
      * */
-    private Node<E> getNode(int index) {
+    public Node<E> getNode(int index) {
         return null;
 
     }
+
+
+    public static void main(String[] args){
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Enter the number of soldiers: ");
+        int soldiers = scan.nextInt();
+        System.out.println("Enter count: ");
+        int count = scan.nextInt();
+
+        CircularLinkedList army = new CircularLinkedList(soldiers, count);
+        System.out.println(army);
+        army.add(2,6);
+        System.out.println(army);
+
+    }
+
 
 }
