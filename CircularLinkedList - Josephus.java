@@ -12,16 +12,26 @@ class CircularLinkedList<E> implements Iterable<E> {
      * */
     public CircularLinkedList(int size, int count) {
         this.count = count;
-
-        int i = size;
-        while(this.size<size){
-            Node nodeToBeAdded = new Node(i);
+        this.size = size;
+        if(size > 0){
+            Node nodeToBeAdded = new Node(1);
             head = nodeToBeAdded;
-            head.next = tail;
             tail = head;
+            tail.next = head;
 
-            i--;
-            this.size++;
+            int initialIndex = 0;
+            while(initialIndex < size){
+                head = nodeToBeAdded;
+                tail = head;
+                tail.next = head;
+                initialIndex++;
+            }
+
+        }else{
+            Node nodeToBeAdded = new Node(1);
+            head = nodeToBeAdded;
+            tail = head;
+            tail.next = head;
         }
     }
 
@@ -38,10 +48,14 @@ class CircularLinkedList<E> implements Iterable<E> {
             size++;
             return true;
         }else{
-            tail = nodeToBeAdded;
-            tail = head;
-            tail.next = head;
-            size++;
+            int initialIndex = 0;
+            Node start = head;
+            while(initialIndex < this.size){
+                start = start.next;
+                initialIndex++;
+            }
+            nodeToBeAdded.next = start.next;
+            start.next = nodeToBeAdded;
             return true;
         }
     }
@@ -70,7 +84,7 @@ class CircularLinkedList<E> implements Iterable<E> {
             tail.next = head;
         }
 
-        else if(index >= size){
+        else if(index >= this.size){
             nodeToBeAdded.next = head;
             tail.next = nodeToBeAdded;
             tail = nodeToBeAdded;
@@ -98,7 +112,7 @@ class CircularLinkedList<E> implements Iterable<E> {
      * 		HINT: Remember to keep track of the list's size
      */
     public E remove(int index) {
-        if(index>=size){//find the out of binds
+        if(index>=this.size){//find the out of binds
             return null;
         }
         return null;
@@ -206,7 +220,7 @@ class CircularLinkedList<E> implements Iterable<E> {
 
         CircularLinkedList army = new CircularLinkedList(soldiers, count);
         System.out.println(army);
-        army.add(2,6);
+        army.add(7);
         System.out.println(army);
 
     }
