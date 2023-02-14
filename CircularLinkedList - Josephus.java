@@ -16,30 +16,50 @@ class CircularLinkedList<E> implements Iterable<E> {
     }
 
     /**
+     * Stringify your list
+     * Cases to handle:
+     * Empty list
+     * Single element list
+     * Multi-element list
+     * Use "==>" to delimit each node
+     */
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        Node<E> e = head;
+        if(e==null){
+            return "EMPTY LIST";
+        }if(size == 1){
+            return e.item.toString();
+        }
+
+        result.append(e.item + "-->");
+        e = e.next;
+
+        while(e.next != null && e != head){
+            result.append(e.item + "-->");
+            e = e.next;
+        }
+
+        return result.toString();
+    }
+
+    /**
      * Add a node to the end of the list(tail)
      * HINT: Use the overloaded add method as a helper method
      * */
     public boolean add(E item) {
-        Node<E> nodeToBeAdded = new Node(item);
-        if(head == null){
-            head = nodeToBeAdded;
-            tail = head;
-            tail.next = head;
-            this.size++;
-
+        Node nodeToBeAdded = new Node(item);
+        if(this.head == null){
+            this.head = nodeToBeAdded;
+            this.tail = this.head;
+            this.tail.next = this.head;
         }else{
-            int initialIndex = 0;
-            Node start = head;
-            while(initialIndex < this.size){
-                start = start.next;
-                initialIndex++;
-            }
-            nodeToBeAdded.next = start.next;
-            start.next = nodeToBeAdded;
-            this.size++;
-            return true;
+            tail.next = nodeToBeAdded;
+            tail = nodeToBeAdded;
         }
-        return false;
+        size++;
+        return true;
     }
 
 
@@ -54,16 +74,16 @@ class CircularLinkedList<E> implements Iterable<E> {
      */
     public void add(int index, E item) {
         Node nodeToBeAdded = new Node(item);
-        if(head == null){
-            head = nodeToBeAdded;
-            tail = head;
-            tail.next = head;
+        if(this.head == null){
+            this.head = nodeToBeAdded;
+            this.tail = this.head;
+            this.tail.next = this.head;
         }
 
         if(index == 0){
-            nodeToBeAdded.next = head;
-            head = nodeToBeAdded;
-            tail.next = head;
+            nodeToBeAdded.next = this.head;
+            this.head = nodeToBeAdded;
+            this.tail.next = this.head;
         }
 
         else if(index >= this.size){
@@ -94,60 +114,34 @@ class CircularLinkedList<E> implements Iterable<E> {
      * 		HINT: Remember to keep track of the list's size
      */
     public E remove(int index) {
-        //Out of bounds
-        if(index>=this.size || index<0){
-
+        //Empty list
+        if(head == null){
+            return null;
         }
-        //First element of list
+        //Out of Bounds
+        if(index < 0 || index >= size){
+            return null;
+        }
+
+        Node temp = head;
+        int i = 0;
+        //First element
         if(index == 0){
-
-
-        }
-        //Last element of list
-        if(index == 1){
-
-        }
-        //Regular case of
-        else{
-
+            head = temp.next;
+            return null;
         }
 
+        while(temp!=null && i<index-1){
+            temp = temp.next;
+            i++;
+        }
+        temp.next = temp.next.next;
         return null;
     }
 
-    /**
-     * Stringify your list
-     * Cases to handle:
-     * Empty list
-     * Single element list
-     * Multi-element list
-     * Use "==>" to delimit each node
-     */
-    @Override
-    public String toString() {
-        StringBuilder result = new StringBuilder();
-        Node<E> e = head;
-        if(e==null){
-            return "EMPTY LIST";
-        }if(size == 1){
-            return e.item.toString();
-        }
-
-        result.append(e.item + "-->");
-        e = e.next;
-
-        while(e.next != null && e != head){
-            result.append(e.item + "-->");
-            e = e.next;
-        }
-
-        return result.toString();
-    }
 
 
     public Iterator<E> iterator() {
-
-
         return new ListIterator<E>();
     }
 
@@ -166,7 +160,9 @@ class CircularLinkedList<E> implements Iterable<E> {
 
         // Returns true if there is a next node
         public boolean hasNext() {
-
+            if(head.next != null){
+                return true;
+            }
             return false;
         }
 
@@ -197,6 +193,11 @@ class CircularLinkedList<E> implements Iterable<E> {
         public Node(E item) {
             this.item = item;
         }
+
+        @Override
+        public String toString(){
+            return this.item.toString();
+        }
     }
 
 
@@ -205,13 +206,16 @@ class CircularLinkedList<E> implements Iterable<E> {
      * Be sure to check for out of bounds cases
      * */
     public Node<E> getNode(int index) {
-        int initialIndex = 0;
-        Node start = head;
-        while(initialIndex < index -1){
-            start = start.next;
-            initialIndex++;
+        Node <E> current = head;
+        int count = 0;
+        while(current!=null){
+            if(count == index){
+                return current;
+            }
+            count++;
+            current = current.next;
         }
-        return start;
+        return null;
     }
 
 
@@ -223,13 +227,16 @@ class CircularLinkedList<E> implements Iterable<E> {
         int count = scan.nextInt();
 
         CircularLinkedList army = new CircularLinkedList();
-        System.out.println(army);
-        for(int i = 1; i<=soldiers; i++){
-            Node nd = new Node(i);
-            army.add(nd);
+        System.out.println("Empty LinkedList: " + army);
+        for(int i = 0; i<=soldiers; i++){
+            army.add(i+1);
         }
-        System.out.println(army);
-        System.out.println(army.getNode(0));
+        System.out.println("Filled LikedList: "+ army);
+        army.add(1,23);
+        System.out.println("Add at index at 1: " + army);
+        army.remove(3);
+        System.out.println("Removed at position 3: "+army);
+        System.out.println("Getting the node at position 1: " + army.getNode(1));
 
     }
 }
