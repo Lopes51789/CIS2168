@@ -1,7 +1,7 @@
 import java.util.Iterator;
 import java.util.Scanner;
 
-class CircularLinkedList<E> implements Iterable<E> {
+public class CircularLinkedList<E> implements Iterable<E> {
     Node<E> head;
     Node<E> tail;
     int size;
@@ -61,7 +61,6 @@ class CircularLinkedList<E> implements Iterable<E> {
         size++;
         return true;
     }
-
 
     /**
      * Cases to handle:
@@ -139,28 +138,28 @@ class CircularLinkedList<E> implements Iterable<E> {
         return null;
     }
 
-
-
+    //Check code on canvas if there are any instructions
     public Iterator<E> iterator() {
         return new ListIterator<E>();
     }
 
     // This class is not static because it needs to reference its parent class
-    class ListIterator<E> implements Iterator<E> {
-        CircularLinkedList.Node nextItem;
-        CircularLinkedList.Node prev;
+    private class ListIterator<E> implements Iterator<E> {
+        Node<E> nextItem;
+        Node<E> prev;
         int index;
 
         @SuppressWarnings("unchecked")
         // Creates a new iterator that starts at the head of the list
         public ListIterator() {
-            nextItem = (CircularLinkedList.Node) head;
+            //"starts at head"
+            nextItem = (Node<E>) head;
             index = 0;
         }
 
         // Returns true if there is a next node
         public boolean hasNext() {
-            if(head.next != null){
+            if(nextItem != null){
                 return true;
             }
             return false;
@@ -169,25 +168,31 @@ class CircularLinkedList<E> implements Iterable<E> {
         // Advances the iterator to the next item
         // Should wrap back around to the head
         public E next() {
-
-            return null;
-
+            Node<E> temp = nextItem;
+            nextItem = nextItem.next;
+            index++;
+            return temp.item;
         }
 
-        // Remove the last node visted by the .next() call
+        // Remove the last node visited by the .next() call
         // For example, if we had just created an iterator,
         // the following calls would remove the item at index 1 (the second person in the ring)
         // next() next() remove()
         // Use CircularLinkedList.this to reference the CircularLinkedList parent class
-        public void remove() {
-
+        public void remove(){
+            Node<E> secondLast = (Node<E>) head;
+            for(int i = 0; i< index - 1; i++){
+                if(hasNext()){
+                    secondLast = secondLast.next;
+                }
+            }
+            secondLast = null;
         }
-
     }
 
 
     // The Node class
-     static class Node<E>{
+     private static class Node<E>{
         E item;
         Node<E> next;
         public Node(E item) {
@@ -225,18 +230,20 @@ class CircularLinkedList<E> implements Iterable<E> {
         int soldiers = scan.nextInt();
         System.out.println("Enter count: ");
         int count = scan.nextInt();
-
         CircularLinkedList army = new CircularLinkedList();
-        System.out.println("Empty LinkedList: " + army);
         for(int i = 0; i<=soldiers; i++){
             army.add(i+1);
         }
-        System.out.println("Filled LikedList: "+ army);
-        army.add(1,23);
-        System.out.println("Add at index at 1: " + army);
-        army.remove(3);
-        System.out.println("Removed at position 3: "+army);
-        System.out.println("Getting the node at position 1: " + army.getNode(1));
 
+
+        System.out.println("Filled LikedList: "+ army);
+        ListIterator<E> li = new ListIterator<E>();
+        while(army.size>2){
+            for(int i = 0; i<2;i++){
+                army.next();
+            }
+            army.remove();
+
+        }
     }
 }
