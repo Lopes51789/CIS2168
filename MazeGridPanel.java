@@ -24,6 +24,59 @@ public class MazeGridPanel extends JPanel {
 		stack.push(start);
 
 		// Implement your algorithm here
+		int i = 0, j = 0, finX= rows-1, finY= cols-1;
+		Cell temp = new Cell(i,j);
+		//boolean[][] visited = new boolean[rows-1][cols-1];
+
+		while(!stack.empty()) {
+			temp = stack.peek();
+			int d = 0;
+			i = temp.getX();
+			j = temp.getY();
+
+			d = d + 1;
+			stack.pop();
+			stack.push(temp);
+
+			if (i == finX && j == finY) {
+				break;
+			}
+			if (d == 0) {
+				if (i - 1 >= 0 && visited(i - 1, j))//lack 1 condition
+				{
+					Cell temp1 = new Cell(i - 1, j);
+					visited(i-1, j) = false;
+					stack.push(temp1);
+				}
+			}
+			if (d == 1) {
+				if (i - 1 >= 0 && visited[i - 1][j])//lack 1 condition
+				{
+					Cell temp1 = new Cell(i, j - 1);
+					visited[i][j - 1] = false;
+					stack.push(temp1);
+				}
+			}
+			if (d == 2) {
+				if (i - 1 >= 0 && visited[i - 1][j])//lack 1 condition
+				{
+					Cell temp1 = new Cell(i + 1, j);
+					visited[i + 1][j] = false;
+					stack.push(temp1);
+				}
+			}
+			if (d == 3) {
+				if (i - 1 >= 0 && visited[i - 1][j])//lack 1 condition
+				{
+					Cell temp1 = new Cell(i, j + 1);
+					visited[i][j + 1] = false;
+					stack.push(temp1);
+				}
+			} else {
+				visited[temp.getX()][temp.getY] = true;
+				stack.pop();
+			}
+		}
 	}
 
 	public boolean visited(int row, int col) {
