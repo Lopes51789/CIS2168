@@ -1,0 +1,111 @@
+package edu.temple.datastructures.dyee.oop.assignment.episode1;
+public class Person extends Creature {
+public boolean canSeeMonsterNow;
+public int directionToMonster = -1;
+public int directionToObject = -1;
+public Person(Model model, int row, int column) {
+super(model, row, column);
+}
+/**
+* Given a direction, check if its close to a wall.
+*
+* @param direction the direction being analyzed
+* @return True if close to a wall, False otherwise
+* */
+boolean nearWall(int direction) {
+if (look(direction) == Model.EDGE) {
+if (distance(direction) <= 2) {
+return true;
+}
+}
+return false;
+}
+/**
+* Checks if Player is close to the monster.
+*
+* @return True if close to monster or False otherwise
+* */
+boolean nearMonster(){
+for(int i = Model.MIN_DIRECTION; i<Model.MAX_DIRECTION; i++){
+if (look(i) == Model.MONSTER) {
+if (distance(i) <= 2) {
+return true;
+}
+}
+}
+return false;
+}
+/**
+* Given the monster direction, it filters all possible
+* restrictions and gives a direction for the Player to
+* follow.
+*
+* @param monsterDirection monster direction
+* @return the direction the Player should go
+* */
+int possibleMovement(int monsterDirection) {
+//Goes into a direction that is not near a wall
+for (int j = Model.MIN_DIRECTION; j <= Model.MAX_DIRECTION; j++) {
+//Checks if j is in the direction of the monster
+if (j == monsterDirection || j == Model.turn(monsterDirection, 4)){
+//System.out.println("line of sight of the monster");
+continue;
+}
+//Check if person can move or its near a wall
+if(!canMove(j) || nearWall(j)){
+//System.out.println("near wall/cant move");
+continue;
+}
+//Checks if monster is nearby and avoids movements that are putting the
+player in a bad position
+if (nearMonster()) {
+//System.out.println("near monster");
+if(j == Model.turn(monsterDirection, 1) || j ==
+Model.turn(monsterDirection, 2) || j == Model.turn(monsterDirection, 6) || j ==
+Model.turn(monsterDirection, 7)){
+continue;
+}
+}
+return j;
+}
+//STUCK
+return Model.STAY;
+}
+/**
+* Make the Player's move.
+*
+* @return the direction the Player should go
+* **/
+int decideMove () {
+int maxDistanceFromObject = 0;
+directionToMonster = 0;
+directionToObject = 0;
+canSeeMonsterNow = false;
+//Checks the direction of the monster
+for (int i = Model.MIN_DIRECTION; i <= Model.MAX_DIRECTION; i++) {
+//Check for the position of the Monster
+if (look(i) == Model.MONSTER) {
+canSeeMonsterNow = true;
+directionToMonster = i;
+}
+}
+//Move if Player sees the monster
+if (canSeeMonsterNow) {
+return possibleMovement(directionToMonster);
+}
+//Check if player is near a wall
+int isNearWall = -1;
+int directionWall = -1;
+for (int i = 0; i <= 6; i+=2){
+if(nearWall(i)){
+isNearWall += 1;
+directionWall = i;
+}
+}
+if(isNearWall == 1){
+return Model.turn(directionWall, 4);
+}if(isNearWall == 2){
+return Model.turn(directionWall, 3);
+}
+return Model.STAY;
+}
